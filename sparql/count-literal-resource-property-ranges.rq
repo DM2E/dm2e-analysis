@@ -1,0 +1,23 @@
+SELECT
+    ?p
+    (COUNT(?o) AS ?total)
+    (COUNT(?oLiteral) AS ?literal)
+    (COUNT(?oIRI) AS ?resource)
+    (?literal / ?total AS ?perc_literal)
+    (ABS(1-?perc_literal) AS ?perc_iri)
+WHERE {
+    GRAPH ?g {
+        {
+            ?s ?p ?o .
+            FILTER(isIRI(?o))
+            BIND(?o AS ?oIRI)
+        }
+        UNION
+        {
+            ?s ?p ?o .
+            FILTER(isLiteral(?o))
+            BIND(?o AS ?oLiteral)
+        }
+    }
+}
+GROUP BY ?p

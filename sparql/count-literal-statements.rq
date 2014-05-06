@@ -1,0 +1,11 @@
+SELECT ?isLiteral (COUNT(*) AS ?no)
+{
+    GRAPH ?g
+    {
+        ?s ?p ?o
+        FILTER(isLiteral(?o))
+        BIND("literal" AS ?isLiteral)
+    }
+}
+GROUP BY ?isLiteral
+ORDER BY DESC(?no)

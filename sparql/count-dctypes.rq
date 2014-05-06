@@ -1,0 +1,7 @@
+SELECT DISTINCT ?dctype (COUNT(?dctype) AS ?no) {
+    GRAPH ?g {
+        ?s dc:type ?dctype
+    }
+}
+GROUP BY ?dctype
+ORDER BY DESC(?no)

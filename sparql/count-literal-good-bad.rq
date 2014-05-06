@@ -1,0 +1,53 @@
+SELECT 
+    ?isLiteral 
+    (COUNT(*) AS ?no) 
+    (COUNT(?badProp) AS ?no_bad) 
+    (COUNT(?goodProp) AS ?no_good)
+{
+    GRAPH ?g
+    {
+        {
+            ?s ?p ?o
+            FILTER(isLiteral(?o))
+            BIND("literal" AS ?isLiteral)
+        }
+        OPTIONAL
+        {
+            ?s ?p ?o .
+            FILTER(isLiteral(?o))
+            FILTER(
+                    ?p = dcterms:created
+                ||  ?p = dcterms:modfied
+                ||  ?p = dcterms:issued
+                ||  ?p = dcterms:temporal
+                ||  ?p = dc:rights
+                ||  ?p = rdaGr2:dateofBirth
+                ||  ?p = rdaGr2:dateofDeath
+                ||  ?p = rdaGr2:dateofEstablishment
+                ||  ?p = rdaGr2:dateofTermination
+            )
+            BIND(?p as ?badProp)
+        }
+        OPTIONAL
+        {
+            ?s ?p ?o .
+            FILTER(isLiteral(?o))
+            FILTER(
+                    ?p = skos:prefLabel
+                ||  ?p = rdfs:label
+                ||  ?p = skos:altLabel
+                ||  ?p = dc:description
+                ||  ?p = dm2e:displayLevel
+                ||  ?p = edm:type
+                ||  ?p = dc:title
+                ||  ?p = dm2e:subtitle
+                ||  ?p = dc:language
+                ||  ?p = dc:format
+                ||  ?p = dc:identifier
+            )
+            BIND(?p as ?goodProp)
+        }
+    }
+}
+GROUP BY ?isLiteral
+ORDER BY DESC(?no)

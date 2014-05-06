@@ -1,0 +1,10 @@
+SELECT ?pat (COUNT(DISTINCT ?s) AS ?no) WHERE {
+    GRAPH ?g {
+        ?sRes ?p ?o .
+        BIND(STR(?sRes) AS ?s)
+        BIND('http://data.dm2e.eu/data/' as ?base)
+        FILTER(STRSTARTS(?s, ?base))
+        BIND(STRBEFORE(SUBSTR(?s, STRLEN(?base)+1), "/") AS ?pat)
+    }
+}
+GROUP BY ?pat

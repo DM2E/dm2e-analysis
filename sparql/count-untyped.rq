@@ -1,0 +1,8 @@
+SELECT ?s (COUNT(?s) AS ?no) {
+    GRAPH ?g {
+        ?s ?p ?o .
+        OPTIONAL { ?s rdf:type ?type }
+        FILTER (!bound(?type))
+    }
+}
+GROUP BY ?s

@@ -1,0 +1,30 @@
+# :Alice rdf:type foaf:Person.
+# :Bob rdf:type foaf:Person.
+# :Alice foaf:age "25".
+# :Bob foaf:age "25" .
+# :Charlie foaf:age "30 .
+# =>
+# ?type ?prop ?nr_poeaqual
+# foaf:Person foaf:age 2
+
+
+
+SELECT ?type ?predicate (SUM(?po_no) AS ?no)
+WHERE
+{
+    {
+        SELECT ?type ?predicate ?object (COUNT(*) AS ?po_no)
+        WHERE
+        {
+            GRAPH ?g 
+            {
+                ?s rdf:type ?type .
+                ?s ?predicate ?object .
+            }
+        }
+        GROUP BY ?type ?predicate ?object
+        HAVING (?po_no >= 100)
+    }
+}
+GROUP BY ?type ?predicate
+ORDER BY DESC(?no)
